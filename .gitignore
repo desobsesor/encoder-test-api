@@ -1,0 +1,24 @@
+# Generated files and directories
+/target/
+*.class
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Environment-specific configuration files
+*.env
+*.properties
+
+# Construction files
+*.jar
+*.war
+*.ear
+
+# IDE Files
+/.idea/
+/.vscode/
+
+# Others
+.DS_Store
+Thumbs.db
