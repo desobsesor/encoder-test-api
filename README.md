@@ -38,6 +38,15 @@ The **Encoder Test API** is designed to provide a robust and efficient way to en
    mvn spring-boot:run
    ```
 
+
+## Testing and Code Coverage
+
+To run tests and generate the coverage report with JaCoCo:
+
+```bash
+mvn clean test
+```
+
 ## Deployment DB
 
 1. **Ensure PostgreSQL is installed and running**.
@@ -98,3 +107,4 @@ _Built by_
 
 - **Yovany Suárez Silva** - _Full Stack Software Engineer_ - [desobsesor](https://github.com/desobsesor)
 - Website - [https://portfolio.cds.net.co](https://desobsesor.github.io/portfolio-web/)
+

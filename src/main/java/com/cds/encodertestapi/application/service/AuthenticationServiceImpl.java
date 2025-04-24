@@ -39,17 +39,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return usuarioRepository.findByUsername(username)
                 .filter(usuario -> passwordEncoder.matches(password, usuario.getPassword()))
                 .map(this::generateToken)
-                .orElseThrow(() -> new BadCredentialsException("Credenciales inválidas"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
     }
 
     @Override
     public Usuario register(Usuario usuario) {
         if (usuarioRepository.existsByUsername(usuario.getUsername())) {
-            throw new RuntimeException("El nombre de usuario ya existe");
+            throw new RuntimeException("The username already exists");
         }
 
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
+            throw new RuntimeException("The email is already registered");
         }
 
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));

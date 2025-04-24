@@ -17,13 +17,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.cds.encodertestapi.domain.model.Usuario;
 import com.cds.encodertestapi.domain.port.UsuarioRepository;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.util.Base64;
 
 class AuthenticationServiceImplTest {
 
@@ -36,15 +39,17 @@ class AuthenticationServiceImplTest {
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(authenticationService, "jwtSecret", jwtSecret);
-        ReflectionTestUtils.setField(authenticationService, "jwtExpiration", 86400000L);
 
+        // Generate a secure key for HS512 algorithm and encode it to Base64
+        String secureKey = Base64.getEncoder().encodeToString(
+                Keys.secretKeyFor(SignatureAlgorithm.HS512).getEncoded());
+
+        // Set the secure key for testing
+        ReflectionTestUtils.setField(authenticationService, "jwtSecret", secureKey);
+        ReflectionTestUtils.setField(authenticationService, "jwtExpiration", 86400000L);
     }
 
     @Test
