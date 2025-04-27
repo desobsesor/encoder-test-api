@@ -17,13 +17,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.cds.encodertestapi.domain.model.Usuario;
 import com.cds.encodertestapi.domain.port.UsuarioRepository;
+import com.cds.encodertestapi.infrastructure.adapter.websocket.WebSocketMessageService;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.util.Base64;
 
 class AuthenticationServiceImplTest {
 
@@ -33,18 +37,23 @@ class AuthenticationServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private WebSocketMessageService webSocketMessageService;
+
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
-
-    @Value("${jwt.secret}")
-    private String jwtSecret;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(authenticationService, "jwtSecret", jwtSecret);
-        ReflectionTestUtils.setField(authenticationService, "jwtExpiration", 86400000L);
 
+        // Generate a secure key for HS512 algorithm and encode it to Base64
+        String secureKey = Base64.getEncoder().encodeToString(
+                Keys.secretKeyFor(SignatureAlgorithm.HS512).getEncoded());
+
+        // Set the secure key for testing
+        ReflectionTestUtils.setField(authenticationService, "jwtSecret", secureKey);
+        ReflectionTestUtils.setField(authenticationService, "jwtExpiration", 86400000L);
     }
 
     @Test
@@ -72,6 +81,7 @@ class AuthenticationServiceImplTest {
         assertFalse(token.isEmpty());
         verify(usuarioRepository).findByUsername(username);
         verify(passwordEncoder).matches(password, encodedPassword);
+        verify(webSocketMessageService).sendLoginSuccessNotification(username);
     }
 
     @Test
@@ -167,5 +177,22 @@ class AuthenticationServiceImplTest {
         verify(usuarioRepository, never()).existsByEmail(anyString());
         verify(passwordEncoder, never()).encode(anyString());
         verify(usuarioRepository, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    void testValidUsernamesAndPasswords() {
+        // Simular un usuario con nombre de usuario 'Administrator' y contraseña 'Maya'
+        Usuario usuario = new Usuario();
+        usuario.setUsername("Administrator");
+        usuario.setPassword("Maya");
+
+        when(usuarioRepository.findByUsername("Administrator")).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("Maya", "Maya")).thenReturn(true);
+
+        // Verificar que el servicio de autenticación acepte estos valores
+        String result = authenticationService.authenticate("Administrator", "Maya");
+        assertNotNull(result);
+        // assertEquals("Administrator", result));
+        verify(webSocketMessageService).sendLoginSuccessNotification("Administrator");
     }
 }
