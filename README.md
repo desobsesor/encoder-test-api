@@ -1,8 +1,6 @@
 # Encoder Test API
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-
-  <p align="center">API services for simple product payment.</p>
+  <p align="center">API services for encoder test</p>
 <p align="center">
   <a href="https://www.java.com" target="_blank"><img src="https://img.shields.io/badge/Java-17-ED8B00?style=flat&logo=java&logoColor=white" alt="Java"></a>
   <a href="https://spring.io/" target="_blank"><img src="https://img.shields.io/badge/Spring_Framework-6.0-6DB33F?style=flat&logo=spring&logoColor=white" alt="Spring Framework"></a>
