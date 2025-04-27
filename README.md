@@ -1,8 +1,6 @@
 # Encoder Test API
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-
-  <p align="center">API services for simple product payment.</p>
+  <p align="center">API services for encoder test</p>
 <p align="center">
   <a href="https://www.java.com" target="_blank"><img src="https://img.shields.io/badge/Java-17-ED8B00?style=flat&logo=java&logoColor=white" alt="Java"></a>
   <a href="https://spring.io/" target="_blank"><img src="https://img.shields.io/badge/Spring_Framework-6.0-6DB33F?style=flat&logo=spring&logoColor=white" alt="Spring Framework"></a>
@@ -19,9 +17,19 @@ The **Encoder Test API** is designed to provide a robust and efficient way to en
 
 ## Technologies Used
 
-- **Java**: The core programming language used for developing the API.
+- **Java 17**: The core programming language used for developing the API.
+- **Spring Boot**: Framework for building stand-alone, production-grade Spring-based applications.
+- **Spring Data JPA**: Simplifies data persistence and database operations.
+- **Spring Security**: Provides authentication and authorization features.
+- **Spring Validation**: For validating user input and data.
+- **Spring WebSocket**: Enables real-time, bidirectional communication between client and server.
 - **PostgreSQL**: Used for database management, providing a reliable and scalable solution.
-- **Spring WebSocket**: Used for implementing real-time notifications.
+- **JWT (io.jsonwebtoken)**: For JSON Web Token creation and validation.
+- **Lombok**: Reduces boilerplate code with annotations (optional, for development).
+- **SpringDoc OpenAPI**: For automatic generation of OpenAPI documentation (Swagger UI).
+- **Mockito**: Testing framework for Java.
+- **JaCoCo**: Code coverage library for Java.
+- **Maven**: Build automation tool used primarily for Java projects.
 
 ## Installation
 
