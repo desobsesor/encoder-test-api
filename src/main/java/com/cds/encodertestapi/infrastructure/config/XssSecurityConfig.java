@@ -44,7 +44,17 @@ public class XssSecurityConfig {
             response.setHeader("X-XSS-Protection", "1; mode=block");
             response.setHeader("X-Content-Type-Options", "nosniff");
             response.setHeader("X-Frame-Options", "DENY");
-            response.setHeader("Content-Security-Policy", "default-src 'self'");
+
+            // Apply a more permissive CSP for HTML reports and static resources
+            String requestPath = request.getRequestURI();
+            if (requestPath.endsWith(".html") || requestPath.contains("/static/") ||
+                    requestPath.contains("/coverage-report")) {
+                response.setHeader("Content-Security-Policy",
+                        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:");
+            } else {
+                response.setHeader("Content-Security-Policy", "default-src 'self'");
+            }
+
             response.setHeader("Referrer-Policy", "no-referrer-when-downgrade");
 
             filterChain.doFilter(request, response);

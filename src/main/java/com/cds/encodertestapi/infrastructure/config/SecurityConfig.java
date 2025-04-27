@@ -43,6 +43,10 @@ public class SecurityConfig {
                                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                                 .requestMatchers("/v3/api-docs.yaml").permitAll()
                                                 .requestMatchers("/webjars/**").permitAll()
+                                                .requestMatchers("/ws/**").permitAll()
+                                                .requestMatchers("/static/**").permitAll()
+                                                .requestMatchers("/*.html").permitAll()
+                                                .requestMatchers("/coverage-report.html").permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

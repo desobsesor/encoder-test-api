@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 public class InputValidator {
 
     // Patterns for input validation
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,20}$");
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*$");
     private static final Pattern EMAIL_PATTERN = Pattern
             .compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
     private static final Pattern SAFE_STRING = Pattern.compile("^[^<>\\\"'%;()&+]*$");

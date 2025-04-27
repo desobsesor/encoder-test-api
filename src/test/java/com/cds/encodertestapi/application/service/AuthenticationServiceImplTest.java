@@ -23,6 +23,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.cds.encodertestapi.domain.model.Usuario;
 import com.cds.encodertestapi.domain.port.UsuarioRepository;
+import com.cds.encodertestapi.infrastructure.adapter.websocket.WebSocketMessageService;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -35,6 +36,9 @@ class AuthenticationServiceImplTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private WebSocketMessageService webSocketMessageService;
 
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
@@ -77,6 +81,7 @@ class AuthenticationServiceImplTest {
         assertFalse(token.isEmpty());
         verify(usuarioRepository).findByUsername(username);
         verify(passwordEncoder).matches(password, encodedPassword);
+        verify(webSocketMessageService).sendLoginSuccessNotification(username);
     }
 
     @Test
@@ -172,5 +177,22 @@ class AuthenticationServiceImplTest {
         verify(usuarioRepository, never()).existsByEmail(anyString());
         verify(passwordEncoder, never()).encode(anyString());
         verify(usuarioRepository, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    void testValidUsernamesAndPasswords() {
+        // Simular un usuario con nombre de usuario 'Administrator' y contraseña 'Maya'
+        Usuario usuario = new Usuario();
+        usuario.setUsername("Administrator");
+        usuario.setPassword("Maya");
+
+        when(usuarioRepository.findByUsername("Administrator")).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("Maya", "Maya")).thenReturn(true);
+
+        // Verificar que el servicio de autenticación acepte estos valores
+        String result = authenticationService.authenticate("Administrator", "Maya");
+        assertNotNull(result);
+        // assertEquals("Administrator", result));
+        verify(webSocketMessageService).sendLoginSuccessNotification("Administrator");
     }
 }

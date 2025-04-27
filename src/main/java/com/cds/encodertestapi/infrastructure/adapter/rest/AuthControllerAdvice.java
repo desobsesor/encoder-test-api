@@ -34,14 +34,14 @@ public class AuthControllerAdvice {
         if (request != null) {
 
             if (!inputValidator.isValidUsername(request.getUsername())) {
-                throw new SecurityException("Nombre de usuario inválido");
+                throw new SecurityException("Invalid username");
             }
 
             // The password is not validated with patterns to allow complex passwords
             // but it is checked for potentially dangerous characters
 
             if (!inputValidator.isSafeString(request.getPassword())) {
-                throw new SecurityException("Contraseña contiene caracteres no permitidos");
+                throw new SecurityException("Password contains illegal characters");
             }
 
         }
@@ -58,11 +58,11 @@ public class AuthControllerAdvice {
         if (request != null) {
 
             if (!inputValidator.isValidUsername(request.getUsername())) {
-                throw new SecurityException("Nombre de usuario inválido");
+                throw new SecurityException("Invalid username");
             }
 
             if (!inputValidator.isSafeString(request.getPassword())) {
-                throw new SecurityException("Contraseña contiene caracteres no permitidos");
+                throw new SecurityException("Password contains illegal characters");
             }
 
         }

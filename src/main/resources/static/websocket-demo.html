@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Login Notification Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .notification {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #connection-status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Login Notification Demo</h1>
+    
+    <div class="card">
+        <h2>Connection Status</h2>
+        <div id="connection-status" class="disconnected">Disconnected</div>
+        <button id="connect-btn">Connect to WebSocket</button>
+        <button id="disconnect-btn" disabled>Disconnect</button>
+    </div>
+    
+    <div class="card">
+        <h2>Login Notifications</h2>
+        <div id="notifications-container">
+            <p>No notifications received yet.</p>
+        </div>
+    </div>
+
+    <!-- Include SockJS and STOMP client libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    
+    <script>
+        // DOM elements
+        const connectBtn = document.getElementById('connect-btn');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const connectionStatus = document.getElementById('connection-status');
+        const notificationsContainer = document.getElementById('notifications-container');
+        
+        // WebSocket variables
+        let stompClient = null;
+        
+        // Connect to WebSocket
+        connectBtn.addEventListener('click', function() {
+            const socket = new SockJS('http://localhost:8081/ws');
+            stompClient = Stomp.over(socket);
+            
+            // Connect and subscribe to login notifications
+            stompClient.connect({}, function(frame) {
+                console.log('Connected to WebSocket: ' + frame);
+                
+                // Update UI
+                connectionStatus.textContent = 'Connected';
+                connectionStatus.className = 'connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                
+                // Clear previous notifications
+                notificationsContainer.innerHTML = '<p>Waiting for login events...</p>';
+                
+                // Subscribe to login notifications
+                stompClient.subscribe('/topic/login-notifications', function(notification) {
+                    const loginEvent = JSON.parse(notification.body);
+                    console.log('Login notification received:', loginEvent);
+                    
+                    // Display the notification
+                    displayNotification(loginEvent);
+                });
+            }, function(error) {
+                console.error('Error connecting to WebSocket:', error);
+                connectionStatus.textContent = 'Connection Failed';
+                connectionStatus.className = 'disconnected';
+            });
+        });
+        
+        // Disconnect from WebSocket
+        disconnectBtn.addEventListener('click', function() {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+                stompClient = null;
+                
+                // Update UI
+                connectionStatus.textContent = 'Disconnected';
+                connectionStatus.className = 'disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                
+                notificationsContainer.innerHTML = '<p>No notifications received yet.</p>';
+            }
+        });
+        
+        // Display notification
+        function displayNotification(loginEvent) {
+            // Remove the "waiting" message if it exists
+            if (notificationsContainer.querySelector('p')) {
+                notificationsContainer.innerHTML = '';
+            }
+            
+            const notificationElement = document.createElement('div');
+            notificationElement.className = 'notification';
+            notificationElement.innerHTML = `
+                <strong>${loginEvent.username}</strong> logged in at 
+                ${new Date(loginEvent.timestamp).toLocaleString()} - 
+                <em>${loginEvent.message}</em>
+            `;
+            
+            notificationsContainer.prepend(notificationElement);
+        }
+    </script>
+</body>
+</html>

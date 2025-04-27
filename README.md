@@ -10,6 +10,7 @@
   <a href="https://site.mockito.org" target="_blank"><img src="https://img.shields.io/badge/Mockito-5.0-83B81A?style=flat&logo=java&logoColor=white" alt="Mockito"></a>
   <a href="https://www.postgresql.org" target="_blank"><img src="https://img.shields.io/badge/PostgreSQL-v8.14.1-%23336791" alt="PostgreSQL"></a>
   <a href="https://swagger.io" target="_blank"><img src="https://img.shields.io/badge/Swagger-v11.1.1-%2385EA2D" alt="Swagger"></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" target="_blank"><img src="https://img.shields.io/badge/WebSocket-Implementado-4479A1?style=flat&logo=socket.io&logoColor=white" alt="WebSocket"></a>
 </p>
 
 ## Introduction
@@ -20,6 +21,7 @@ The **Encoder Test API** is designed to provide a robust and efficient way to en
 
 - **Java**: The core programming language used for developing the API.
 - **PostgreSQL**: Used for database management, providing a reliable and scalable solution.
+- **Spring WebSocket**: Used for implementing real-time notifications.
 
 ## Installation
 
@@ -65,11 +67,16 @@ mvn clean test
   <img src="src/main/resources/images/relation-entity.png" alt="Database Schema" width="800"/>
 </p>
 
+### WebSocket Login Notification System
+
+This application includes a WebSocket mechanism to notify web clients immediately after successful login events. The system follows clean architecture principles and maintains modularity by placing WebSocket-related logic in independent, appropriately named files. For detailed documentation on the WebSocket implementation, please refer to the WebSocket module README located at `src/main/java/com/cds/encodertestapi/infrastructure/adapter/websocket/README.md`.
+
 ## Built with 🛠️
 
 _Tools and Technologies used_
 - [Java](URL_ADDRESS.java.com/) - Java is a high-level, class-based, object-oriented programming language
 - [Spring Boot](URL_ADDRESS.io/projects/spring-boot) - Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just run".
+- [Spring WebSocket](https://docs.spring.io/spring-framework/reference/web/websocket.html) - Spring WebSocket proporciona soporte para comunicación bidireccional en tiempo real entre cliente y servidor.
 - [Swagger](https://swagger.io/) -Swagger is an open specification for defining APIs
 - [PostgreSQL](https://https://www.postgresql.org/) - PostgreSQL is a powerful, open-source object-relational database system
 - [Mockito](https://mockito.org) - Mockito is a testing framework for Java.

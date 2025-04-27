@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.cds.encodertestapi.domain.model.Usuario;
 import com.cds.encodertestapi.domain.port.AuthenticationService;
 import com.cds.encodertestapi.domain.port.UsuarioRepository;
+import com.cds.encodertestapi.infrastructure.adapter.websocket.WebSocketMessageService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,6 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final WebSocketMessageService webSocketMessageService;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -36,10 +38,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String authenticate(String username, String password) {
-        return usuarioRepository.findByUsername(username)
+        String token = usuarioRepository.findByUsername(username)
                 .filter(usuario -> passwordEncoder.matches(password, usuario.getPassword()))
                 .map(this::generateToken)
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+        
+        // Send WebSocket notification for successful login
+        webSocketMessageService.sendLoginSuccessNotification(username);
+        
+        return token;
     }
 
     @Override
