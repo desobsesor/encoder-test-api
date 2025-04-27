@@ -1,0 +1,10 @@
+[
+    {
+        "package": "com.cds.encodertestapi.application.service",
+        "coverage": 85
+    },
+    {
+        "package": "com.cds.encodertestapi.infrastructure.adapter.rest",
+        "coverage": 92
+    }
+]
